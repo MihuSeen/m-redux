@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "jsx": "react",
+    "lib": ["DOM", "ES6"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "noImplicitThis": true,
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "sourceMap": true,
+    "strictNullChecks": false,
+    "target": "ES5"
+  }
+}

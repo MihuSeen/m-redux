@@ -1,0 +1,29 @@
+{
+  "name": "m-redux",
+  "version": "0.0.1",
+  "description": "Mini Redux-like state manage tool with Immer built-in",
+  "keywords": [
+    "react",
+    "redux",
+    "immer"
+  ],
+  "author": "MihuSeen",
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "compile": "tsc -d --project tsconfig.json --outDir lib/",
+    "postinstall": "rm -rfv node_modules/@types/*/node_modules/@types/react"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.35",
+    "@types/shallowequal": "^1.1.1",
+    "tslib": "^2.0.0",
+    "typescript": "^3.9.5"
+  },
+  "dependencies": {
+    "immer": "^1.12.1",
+    "react": "^16.13.1",
+    "shallowequal": "^1.1.0"
+  }
+}

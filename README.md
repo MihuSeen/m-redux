@@ -1,37 +1,181 @@
-# mini-redux
+# m-redux
 
-#### 介绍
-mini redux
+## Description
 
-#### 软件架构
-软件架构说明
+Mini Redux-like state manage tool with Immer built-in.
 
+## Install
 
-#### 安装教程
+npm
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+```bash
+npm install m-redux
+```
 
-#### 使用说明
+yarn
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+```bash
+yarn add m-redux
+```
 
-#### 参与贡献
+## Usage
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+### Model
 
+src/store.ts
 
-#### 码云特技
+```ts
+import { createStore } from "m-redux";
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+export interface IGlobalStore {
+  count: number;
+  obj: {
+    objCount: number;
+  };
+}
+
+const initialStore: IGlobalStore = {
+  count: 0,
+  obj: { objCount: 0 },
+};
+
+const globalStore = createStore<IGlobalStore>(initialStore);
+
+export default globalStore;
+```
+
+### Controller
+
+src/controller.ts
+
+```ts
+import { globalStore } from "./store";
+
+const countInc = () => {
+  globalStore.update((store) => {
+    store.count += 1;
+  });
+};
+
+const objCountInc = () => {
+  globalStore.updateAt("obj", (obj) => {
+    obj.objCount += 1;
+  });
+};
+
+export { countInc, objCountInc };
+```
+
+### View
+
+First step is to add `MReduxProvider` in root component:
+
+src/main.tsx
+
+```tsx
+import React from "react";
+import ReactDOM from "react-dom";
+import { MReduxProvider } from "m-redux";
+
+import { globalStore } from "./store";
+
+import { Container } from "./Container";
+
+const renderApp = () => {
+  ReactDOM.render(
+    <MReduxProvider value={globalStore}>
+      <Container store={globalStore.getState()} />
+    </MReduxProvider>,
+    document.querySelector("#app"),
+  );
+};
+
+window.onload = () => {
+  renderApp();
+
+  globalStore.subscribe(renderApp);
+};
+```
+
+To read data in child components with hooks, use `useMReduxContext`:
+
+src/hooks-child.tsx
+
+```tsx
+import React, { FC } from "react";
+import { useMReduxContext } from "m-redux";
+
+import { IGlobalStore } from "./store";
+import { countInc } from "./controller";
+
+interface IProps {}
+
+const HooksChild: FC<IProps> = (props) => {
+  const count = useMReduxContext((store: IGlobalStore) => {
+    return store.count;
+  });
+
+  return (
+    <>
+      <pre>count:{count}</pre>
+      <a onClick={countInc}>countInc</a>
+    </>
+  );
+};
+
+export default HooksChild;
+```
+
+Child components with class, use `connectMRedux`:
+
+src/class-child.tsx
+
+```tsx
+import React, { PureComponent } from "react";
+import { connectMRedux } from "m-redux";
+
+import { IGlobalStore } from "./store";
+import { objCountInc } from "./controller";
+
+interface IProps {
+  objCount: number;
+}
+
+interface IState {}
+
+@connectMRedux((store: IGlobalStore, ownProps: IProps) => {
+  console.log("ownProps", ownProps);
+
+  return { objCount: store.obj.objCount };
+})
+class ClassChild extends PureComponent<IProps, IState> {
+  constructor(props) {
+    super(props);
+
+    this.state = {};
+  }
+
+  render() {
+    const { objCount } = this.props;
+
+    return (
+      <>
+        <pre>objCount:{objCount}</pre>
+        <a onClick={objCountInc}>objCountInc</a>
+      </>
+    );
+  }
+}
+
+export default ClassChild;
+```
+
+### Debug
+
+```ts
+window.MREDUX_DEV_LOG = true;
+```
+
+## License
+
+[MIT](./LICENSE)

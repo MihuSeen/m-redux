@@ -1,0 +1,23 @@
+# git
+.git
+
+# misc
+.DS_Store
+*.log
+
+# visual studio code
+.vscode/
+
+# workplace
+src/
+
+# dependencies
+node_modules/
+yarn.lock
+
+# configuration
+.editorconfig
+.gitattributes
+.prettierrc
+.gitignore
+tsconfig.json
