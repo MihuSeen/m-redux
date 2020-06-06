@@ -1,6 +1,6 @@
 {
   "name": "m-redux",
-  "version": "0.0.2",
+  "version": "0.0.7",
   "description": "Mini Redux-like state manage tool with Immer built-in",
   "keywords": [
     "hooks",
@@ -13,13 +13,8 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "compile": "rm -rfv lib && tsc -d --project tsconfig.json --outDir lib/",
-    "postinstall": "rm -rfv node_modules/@types/*/node_modules/@types/react"
-  },
-  "peerDependencies": {
-    "immer": "*",
-    "react": "*",
-    "shallowequal": "*"
+    "postinstall": "rm -rfv node_modules/@types/*/node_modules/@types/react",
+    "compile": "rm -rfv lib && tsc -d --project tsconfig.json --outDir lib/"
   },
   "devDependencies": {
     "@types/react": "^16.9.35",

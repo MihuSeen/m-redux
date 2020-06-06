@@ -41,7 +41,7 @@ const initialStore: IGlobalStore = {
 
 const globalStore = createStore<IGlobalStore>(initialStore);
 
-export default globalStore;
+export { globalStore };
 ```
 
 ### Controller

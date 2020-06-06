@@ -70,7 +70,10 @@ const createStore = <T extends unknown>(initalState: T) => {
     update: (f: (store: T) => void) => {
       devTrace("Update with f", f);
 
-      mReduxContainer.currentState = produce(mReduxContainer.currentState, f);
+      mReduxContainer.currentState = produce(
+        mReduxContainer.currentState as any,
+        f,
+      );
 
       emitChange();
     },
@@ -98,7 +101,7 @@ const createStore = <T extends unknown>(initalState: T) => {
         },
       };
     },
-  };
+  } as IMReduxStore<T>;
 };
 
 const MReduxProvider: SFC<IMReduxProviderProps> = (props) => {
