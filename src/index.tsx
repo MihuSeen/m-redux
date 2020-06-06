@@ -7,7 +7,6 @@ import React, {
   useContext,
   createContext,
 } from "react";
-
 import produce from "immer";
 import shallowequal from "shallowequal";
 
@@ -20,6 +19,12 @@ if (typeof window !== "undefined") {
 const devLog = (...args: any[]) => {
   if (window && window[logKey]) {
     console.log(...args);
+  }
+};
+
+const devInfo = (...args: any[]) => {
+  if (window && window[logKey]) {
+    console.info(...args);
   }
 };
 
@@ -67,7 +72,7 @@ const createStore = <T extends unknown>(initalState: T) => {
 
   return {
     getState: () => mReduxContainer.currentState,
-    update: (f: (store: T) => void) => {
+    update: (f) => {
       devTrace("Update with f", f);
 
       mReduxContainer.currentState = produce(
@@ -77,7 +82,7 @@ const createStore = <T extends unknown>(initalState: T) => {
 
       emitChange();
     },
-    updateAt: <K extends keyof T>(k: K, f: (x: T[K]) => void) => {
+    updateAt: (k, f) => {
       devTrace("Update partial with f", f);
 
       mReduxContainer.currentState = produce(
@@ -90,7 +95,7 @@ const createStore = <T extends unknown>(initalState: T) => {
 
       emitChange();
     },
-    subscribe: (f: (store: T) => void) => {
+    subscribe: (f) => {
       mReduxContainer.listeners.unshift(f);
 
       return {
@@ -118,7 +123,7 @@ const MReduxProvider: SFC<IMReduxProviderProps> = (props) => {
       devLog("Provide new value:", value.getState());
     });
 
-    console.info("MRedux provider is now listening.");
+    devInfo("MRedux provider is now listening.");
 
     return () => {
       result.unsubscribe();
@@ -138,9 +143,9 @@ class MReduxDataLayer extends Component<IMReduxDataLayerProps> {
   shouldComponentUpdate(nextProps: IMReduxDataLayerProps) {
     const { computedProps, parentProps } = this.props;
 
-    if (!shallowequal(nextProps.parentProps, parentProps)) return true;
-
     if (!shallowequal(nextProps.computedProps, computedProps)) return true;
+
+    if (!shallowequal(nextProps.parentProps, parentProps)) return true;
 
     return false;
   }
@@ -167,7 +172,7 @@ const connectMRedux = <T extends unknown>(
 };
 
 const useMReduxContext = <S, T>(selector: (s: S) => T): T => {
-  let contextValue: S = useContext(MReduxContext);
+  const contextValue: S = useContext(MReduxContext);
 
   return selector(contextValue);
 };

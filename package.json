@@ -1,6 +1,6 @@
 {
   "name": "m-redux",
-  "version": "0.0.7",
+  "version": "0.1.4",
   "description": "Mini Redux-like state manage tool with Immer built-in",
   "keywords": [
     "hooks",
@@ -20,7 +20,7 @@
     "@types/react": "^16.9.35",
     "@types/shallowequal": "^1.1.1",
     "tslib": "^2.0.0",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.2"
   },
   "dependencies": {
     "immer": "^1.12.1",
