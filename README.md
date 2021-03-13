@@ -79,14 +79,14 @@ import { MReduxProvider } from "m-redux";
 
 import { globalStore } from "./store";
 
-import { Container } from "./Container";
+import { Main } from "./Main";
 
 const renderApp = () => {
   ReactDOM.render(
     <MReduxProvider value={globalStore}>
-      <Container store={globalStore.getState()} />
+      <Main store={globalStore.getState()} />
     </MReduxProvider>,
-    document.querySelector("#app"),
+    document.getElementById("root"),
   );
 };
 

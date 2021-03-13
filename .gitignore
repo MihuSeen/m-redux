@@ -1,8 +1,10 @@
 # See https://git-scm.com/docs/gitignore for more about ignoring files.
 
+# log
+*.log*
+
 # misc
 .DS_Store
-*.log
 
 # webstorm
 .idea/
@@ -13,5 +15,5 @@
 # dependencies
 node_modules/
 
-# production
+# compile
 lib/

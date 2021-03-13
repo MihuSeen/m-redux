@@ -1,10 +1,10 @@
 import React, {
-  SFC,
+  FC,
   useState,
   useEffect,
   ReactNode,
-  Component,
   useContext,
+  PureComponent,
   createContext,
 } from "react";
 import produce from "immer";
@@ -43,7 +43,6 @@ export interface IMReduxStore<T> {
 
 interface IMReduxProviderProps {
   value: IMReduxStore<any>;
-  children: ReactNode;
 }
 
 interface IMReduxDataLayerProps {
@@ -75,10 +74,7 @@ const createStore = <T extends unknown>(initalState: T) => {
     update: (f) => {
       devTrace("Update with f", f);
 
-      mReduxContainer.currentState = produce(
-        mReduxContainer.currentState as any,
-        f,
-      );
+      mReduxContainer.currentState = produce(mReduxContainer.currentState, f);
 
       emitChange();
     },
@@ -86,10 +82,10 @@ const createStore = <T extends unknown>(initalState: T) => {
       devTrace("Update partial with f", f);
 
       mReduxContainer.currentState = produce(
-        mReduxContainer.currentState as any,
+        mReduxContainer.currentState,
 
         (store) => {
-          f(store[k]);
+          f(store[k as any]);
         },
       );
 
@@ -109,8 +105,8 @@ const createStore = <T extends unknown>(initalState: T) => {
   } as IMReduxStore<T>;
 };
 
-const MReduxProvider: SFC<IMReduxProviderProps> = (props) => {
-  const { value, children } = props;
+const MReduxProvider: FC<IMReduxProviderProps> = (props) => {
+  const { value } = props;
 
   const [storeValue, setStoreValue] = useState(value.getState());
 
@@ -130,10 +126,10 @@ const MReduxProvider: SFC<IMReduxProviderProps> = (props) => {
     };
   }, [value]);
 
-  return <Provider value={storeValue}>{children}</Provider>;
+  return <Provider value={storeValue}>{props.children}</Provider>;
 };
 
-class MReduxDataLayer extends Component<IMReduxDataLayerProps> {
+class MReduxDataLayer extends PureComponent<IMReduxDataLayerProps> {
   render() {
     const { Child, computedProps, parentProps } = this.props;
 
@@ -155,7 +151,7 @@ const connectMRedux = <T extends unknown>(
   selector: (s: T, ownProps?: any) => any,
 ): any => {
   return (Target: any) => {
-    const MReduxContainer: SFC = (props) => {
+    const MReduxContainer: FC = (props) => {
       const storeValue: T = useContext(MReduxContext);
 
       return (

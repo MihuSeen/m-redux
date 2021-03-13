@@ -3,9 +3,11 @@
 # git
 .git
 
+# log
+*.log*
+
 # misc
 .DS_Store
-*.log
 
 # visual studio code
 .vscode/
@@ -20,6 +22,6 @@ yarn.lock
 # configuration
 .editorconfig
 .gitattributes
-.prettierrc
 .gitignore
+.prettierrc
 tsconfig.json
